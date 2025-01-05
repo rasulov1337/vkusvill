@@ -7,6 +7,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -26,13 +28,8 @@ export default function Filter() {
             </Select>
 
             <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
-                <label
-                    htmlFor="terms"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                    Сетевой?
-                </label>
+                <Switch id="switch" />
+                <Label htmlFor="switch">Сетевой?</Label>
             </div>
         </div>
     );
