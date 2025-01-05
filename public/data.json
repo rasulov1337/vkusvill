@@ -1,0 +1,92 @@
+[
+    {
+        "global_id": 637376221,
+        "Number": 1,
+        "Cells": {
+            "ID": "00151635",
+            "Name": "СМЕТАНА",
+            "global_id": 637376221,
+            "IsNetObject": "нет",
+            "OperatingCompany": "",
+            "TypeObject": "кафе",
+            "AdmArea": "Северо-Восточный административный округ",
+            "District": "Ярославский район",
+            "Address": "Российская Федерация, город Москва, внутригородская территория муниципальный округ Ярославский, улица Егора Абакумова, дом 9",
+            "PublicPhone": [
+                {
+                    "is_deleted": 0,
+                    "PublicPhone": "(499) 183-14-10",
+                    "global_id": 48606
+                }
+            ],
+            "SeatsCount": 44,
+            "SocialPrivileges": "нет",
+            "Longitude_WGS84": "37.7145650004360390",
+            "Latitude_WGS84": "55.8790015313033730",
+            "geoData": {
+                "coordinates": [37.714565, 55.879001531],
+                "type": "Point"
+            }
+        }
+    },
+    {
+        "global_id": 637376331,
+        "Number": 2,
+        "Cells": {
+            "global_id": 637376331,
+            "ID": "000077874",
+            "Name": "Родник",
+            "IsNetObject": "нет",
+            "OperatingCompany": "",
+            "TypeObject": "кафе",
+            "AdmArea": "Центральный административный округ",
+            "District": "Таганский район",
+            "Address": "город Москва, улица Талалихина, дом 2/1, корпус 1",
+            "PublicPhone": [
+                {
+                    "global_id": 48607,
+                    "is_deleted": 0,
+                    "PublicPhone": "(495) 676-55-35"
+                }
+            ],
+            "SeatsCount": 35,
+            "SocialPrivileges": "нет",
+            "Longitude_WGS84": "37.6733061300344000",
+            "Latitude_WGS84": "55.7382386551547000",
+            "geoData": {
+                "coordinates": [37.67330613, 55.738238655],
+                "type": "Point"
+            }
+        }
+    },
+    {
+        "global_id": 637376349,
+        "Number": 3,
+        "Cells": {
+            "ID": "000024309",
+            "Name": "Кафе «Академия»",
+            "global_id": 637376349,
+            "IsNetObject": "нет",
+            "OperatingCompany": "",
+            "TypeObject": "ресторан",
+            "AdmArea": "Центральный административный округ",
+            "District": "Таганский район",
+            "Address": "Российская Федерация, город Москва, внутригородская территория муниципальный округ Таганский, Абельмановская улица, дом 6",
+            "PublicPhone": [
+                {
+                    "is_deleted": 0,
+                    "PublicPhone": "(495) 662-30-10",
+                    "global_id": 48608
+                }
+            ],
+            "SeatsCount": 95,
+            "SocialPrivileges": "нет",
+            "Longitude_WGS84": "37.6696475969381000",
+            "Latitude_WGS84": "55.7355114718314000",
+            "geoData": {
+                "coordinates": [37.669647597, 55.735511472],
+                "type": "Point"
+            }
+        }
+    }
+]
