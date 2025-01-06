@@ -9,10 +9,21 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useEffect } from "react";
+import L from "leaflet";
 
 export default function Filter() {
+    // Disable map grabbing & scrolling on filter element mouse events
+    useEffect(() => {
+        const filterElement = document.querySelector(".filter") as HTMLElement;
+        if (filterElement) {
+            L.DomEvent.disableClickPropagation(filterElement);
+            L.DomEvent.disableScrollPropagation(filterElement);
+        }
+    }, []);
+
     return (
-        <div className="filter leaflet-control">
+        <div className="filter leaflet-control" draggable="false">
             <Label>Название управляющей компании</Label>
             <Input placeholder="Название управляющей компании"></Input>
 
