@@ -10,17 +10,18 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-import { Checkbox } from "@/components/ui/checkbox";
-
 export default function Filter() {
     return (
-        <div className="filter">
+        <div className="filter leaflet-control">
+            <Label>Название управляющей компании</Label>
             <Input placeholder="Название управляющей компании"></Input>
+
+            <Label htmlFor="object-type">Тип объекта</Label>
             <Select>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Theme" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="on-map" id="object-type">
                     <SelectItem value="light">Light</SelectItem>
                     <SelectItem value="dark">Dark</SelectItem>
                     <SelectItem value="system">System</SelectItem>
