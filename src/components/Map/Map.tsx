@@ -51,9 +51,9 @@ export default function Map() {
             fetchUrl += ` and OperatingCompany eq '${filterValues.companyName}'`;
         }
 
-        // if (filterValues.buildingType) {
-        //     fetchUrl += ` and TypeObject eq '${filterValues.buildingType}'`
-        // }
+        if (filterValues.objectType) {
+            fetchUrl += ` and TypeObject eq '${filterValues.objectType}'`;
+        }
 
         axios.get(fetchUrl).then(({ data }) => {
             setData(data);

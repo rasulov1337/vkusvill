@@ -13,6 +13,20 @@ import L from "leaflet";
 
 import * as Types from "@/Types";
 
+const OBJECT_TYPES = [
+    "ресторан",
+    "бар",
+    "кафе",
+    "столовая",
+    "предприятие быстрого обслуживания",
+    "буфет",
+    "закусочная",
+    "кафетерий",
+    "магазин (отдел кулинарии)",
+    "заготовочный цех",
+    "ночной клуб (дискотека)",
+];
+
 export default function Filter({
     filterValues,
     setFilterValues,
@@ -48,18 +62,25 @@ export default function Filter({
             <Select
                 onValueChange={(value) =>
                     updateFilterValues({
-                        objectType: value,
+                        objectType: value === "undefined" ? undefined : value,
                     })
                 }
                 value={filterValues.objectType}
+                defaultValue="undefined"
             >
                 <SelectTrigger className="w-[100%]">
-                    <SelectValue placeholder="Theme" />
+                    <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="on-map" id="object-type">
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
+                <SelectContent
+                    className="w-[225px] h-[300px] on-map"
+                    id="object-type"
+                >
+                    <SelectItem value="undefined">Любой</SelectItem>
+                    {OBJECT_TYPES.map((type, index) => (
+                        <SelectItem key={index} value={type}>
+                            {type}
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
 
@@ -83,7 +104,7 @@ export default function Filter({
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="on-map" id="is-net">
-                    <SelectItem value="undefined">Не имеет значения</SelectItem>
+                    <SelectItem value="undefined">Любой</SelectItem>
                     <SelectItem value="true">Да</SelectItem>
                     <SelectItem value="false">Нет</SelectItem>
                 </SelectContent>
