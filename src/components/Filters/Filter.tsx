@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import "./Filter.scss";
 import {
     Select,
     SelectContent,
@@ -48,67 +47,76 @@ export default function Filter({
     }, []);
 
     return (
-        <div className="filter leaflet-control" draggable="false">
-            <Label>Название управляющей компании</Label>
-            <Input
-                placeholder="Название управляющей компании"
-                value={filterValues.companyName}
-                onChange={(e) =>
-                    updateFilterValues({ companyName: e.target.value })
-                }
-            ></Input>
-
-            <Label htmlFor="object-type">Тип объекта</Label>
-            <Select
-                onValueChange={(value) =>
-                    updateFilterValues({
-                        objectType: value === "undefined" ? undefined : value,
-                    })
-                }
-                value={filterValues.objectType}
-                defaultValue="undefined"
-            >
-                <SelectTrigger className="w-[100%]">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent
-                    className="w-[225px] h-[300px] on-map"
-                    id="object-type"
+        <div
+            className="leaflet-control text-zinc-50 bg-zinc-950 gap-5 top-1/2 left-5 h-72 flex flex-col select-none box-border rounded-lg p-3.5 -translate-y-1/2"
+            draggable="false"
+        >
+            <div>
+                <Label>Название управляющей компании</Label>
+                <Input
+                    placeholder="Название управляющей компании"
+                    value={filterValues.companyName}
+                    onChange={(e) =>
+                        updateFilterValues({ companyName: e.target.value })
+                    }
+                ></Input>
+            </div>
+            <div>
+                <Label htmlFor="object-type">Тип объекта</Label>
+                <Select
+                    onValueChange={(value) =>
+                        updateFilterValues({
+                            objectType:
+                                value === "undefined" ? undefined : value,
+                        })
+                    }
+                    value={filterValues.objectType}
+                    defaultValue="undefined"
                 >
-                    <SelectItem value="undefined">Любой</SelectItem>
-                    {OBJECT_TYPES.map((type, index) => (
-                        <SelectItem key={index} value={type}>
-                            {type}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+                    <SelectTrigger className="w-[100%]">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent
+                        className="w-[225px] h-[300px] on-map"
+                        id="object-type"
+                    >
+                        <SelectItem value="undefined">Любой</SelectItem>
+                        {OBJECT_TYPES.map((type, index) => (
+                            <SelectItem key={index} value={type}>
+                                {type}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
 
-            <Label htmlFor="is-net">Является сетевым</Label>
-            <Select
-                onValueChange={(value) =>
-                    updateFilterValues({
-                        isNet:
-                            value === "undefined"
-                                ? undefined
-                                : value === "true",
-                    })
-                }
-                value={
-                    filterValues.isNet !== undefined
-                        ? `${filterValues.isNet}`
-                        : "undefined"
-                }
-            >
-                <SelectTrigger className="w-[100%]">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="on-map" id="is-net">
-                    <SelectItem value="undefined">Любой</SelectItem>
-                    <SelectItem value="true">Да</SelectItem>
-                    <SelectItem value="false">Нет</SelectItem>
-                </SelectContent>
-            </Select>
+            <div>
+                <Label htmlFor="is-net">Является сетевым</Label>
+                <Select
+                    onValueChange={(value) =>
+                        updateFilterValues({
+                            isNet:
+                                value === "undefined"
+                                    ? undefined
+                                    : value === "true",
+                        })
+                    }
+                    value={
+                        filterValues.isNet !== undefined
+                            ? `${filterValues.isNet}`
+                            : "undefined"
+                    }
+                >
+                    <SelectTrigger className="w-[100%]">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="on-map" id="is-net">
+                        <SelectItem value="undefined">Любой</SelectItem>
+                        <SelectItem value="true">Да</SelectItem>
+                        <SelectItem value="false">Нет</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
         </div>
     );
 }
