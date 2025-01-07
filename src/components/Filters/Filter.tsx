@@ -49,12 +49,14 @@ export default function Filter({
     return (
         <div
             id="filter"
-            className="leaflet-control text-zinc-50 bg-zinc-950 gap-5 top-1/2 left-5 flex flex-col select-none box-border rounded-lg p-5 -translate-y-1/2"
+            className="leaflet-control text-zinc-50 bg-zinc-950 gap-5 top-1/2 left-5 flex flex-col select-none box-border rounded-lg p-5 -translate-y-1/2 font-inter"
             draggable="false"
         >
-            <p className="font-medium text-lg">Фильтры</p>
+            <p className="font-semibold text-xl">Фильтры</p>
             <div>
-                <Label>Название управляющей компании</Label>
+                <Label className="font-light">
+                    Название управляющей компании
+                </Label>
                 <Input
                     placeholder="Название управляющей компании"
                     value={filterValues.companyName}
@@ -64,7 +66,9 @@ export default function Filter({
                 ></Input>
             </div>
             <div>
-                <Label htmlFor="object-type">Тип объекта</Label>
+                <Label htmlFor="object-type" className="font-light">
+                    Тип объекта
+                </Label>
                 <Select
                     onValueChange={(value) =>
                         updateFilterValues({
@@ -93,7 +97,9 @@ export default function Filter({
             </div>
 
             <div>
-                <Label htmlFor="is-net">Является сетевым</Label>
+                <Label htmlFor="is-net" className="font-light">
+                    Является сетевым
+                </Label>
                 <Select
                     onValueChange={(value) =>
                         updateFilterValues({

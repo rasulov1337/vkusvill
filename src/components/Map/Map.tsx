@@ -91,7 +91,7 @@ export default function Map() {
                             el.Cells.geoData.coordinates[0],
                         ]}
                     >
-                        <Popup className="popup inter">
+                        <Popup className="popup">
                             <p className="text-base font-semibold">
                                 {el.Cells.Name + '"'}
                             </p>
