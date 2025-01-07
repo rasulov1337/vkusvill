@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import L from "leaflet";
+import { locationIcon, busStopIcon } from "@/app/Icon";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
@@ -94,6 +95,7 @@ export default function Map() {
                             el.Cells.geoData.coordinates[1],
                             el.Cells.geoData.coordinates[0],
                         ]}
+                        icon={locationIcon}
                     >
                         <Popup className="popup">
                             <p className="text-base font-semibold">
@@ -112,6 +114,7 @@ export default function Map() {
                             el.Cells.geoData.coordinates[1],
                             el.Cells.geoData.coordinates[0],
                         ]}
+                        icon={busStopIcon}
                     >
                         <Popup className="popup">
                             <p className="popup__place-name">
