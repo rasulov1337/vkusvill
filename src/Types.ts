@@ -1,5 +1,5 @@
 export interface Filter {
     companyName: string | undefined;
-    buildingType: string | undefined;
-    isChain: boolean;
+    objectType: string | undefined;
+    isNet: boolean | undefined;
 }

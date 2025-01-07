@@ -8,7 +8,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useEffect } from "react";
 import L from "leaflet";
 
@@ -49,12 +48,12 @@ export default function Filter({
             <Select
                 onValueChange={(value) =>
                     updateFilterValues({
-                        buildingType: value,
+                        objectType: value,
                     })
                 }
-                value={filterValues.buildingType}
+                value={filterValues.objectType}
             >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[100%]">
                     <SelectValue placeholder="Theme" />
                 </SelectTrigger>
                 <SelectContent className="on-map" id="object-type">
@@ -64,18 +63,31 @@ export default function Filter({
                 </SelectContent>
             </Select>
 
-            <div className="flex items-center space-x-2">
-                <Switch
-                    id="switch"
-                    onCheckedChange={(value) =>
-                        updateFilterValues({
-                            isChain: value,
-                        })
-                    }
-                    checked={filterValues.isChain}
-                />
-                <Label htmlFor="switch">Сетевой?</Label>
-            </div>
+            <Label htmlFor="is-net">Является сетевым</Label>
+            <Select
+                onValueChange={(value) =>
+                    updateFilterValues({
+                        isNet:
+                            value === "undefined"
+                                ? undefined
+                                : value === "true",
+                    })
+                }
+                value={
+                    filterValues.isNet !== undefined
+                        ? `${filterValues.isNet}`
+                        : "undefined"
+                }
+            >
+                <SelectTrigger className="w-[100%]">
+                    <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="on-map" id="is-net">
+                    <SelectItem value="undefined">Не имеет значения</SelectItem>
+                    <SelectItem value="true">Да</SelectItem>
+                    <SelectItem value="false">Нет</SelectItem>
+                </SelectContent>
+            </Select>
         </div>
     );
 }

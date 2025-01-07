@@ -19,9 +19,9 @@ export default function Map() {
     const [data, setData] = useState([]);
     const [busStops, setBusStops] = useState([]);
     const [filterValues, setFilterValues] = useState<Types.Filter>({
-        buildingType: undefined,
+        objectType: undefined,
         companyName: undefined,
-        isChain: false,
+        isNet: undefined,
     });
 
     useEffect(() => {
@@ -41,7 +41,11 @@ export default function Map() {
         // });
         // axios.get("/bus_stops.json").then(({ data }) => setBusStops(data));
 
-        let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10&$filter=IsNetObject eq ${filterValues.isChain}`;
+        let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10&$filter=`;
+
+        if (filterValues.isNet !== undefined) {
+            fetchUrl += `IsNetObject eq ${filterValues.isNet}`;
+        }
 
         if (filterValues.companyName) {
             fetchUrl += ` and OperatingCompany eq '${filterValues.companyName}'`;
