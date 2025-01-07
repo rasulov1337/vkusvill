@@ -6,6 +6,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useEffect } from "react";
 import L from "leaflet";
@@ -46,6 +48,14 @@ export default function Filter({
         }
     }, []);
 
+    const handleReset = () => {
+        setFilterValues({
+            isNet: undefined,
+            companyName: "",
+            objectType: "",
+        });
+    };
+
     return (
         <div
             id="filter"
@@ -72,7 +82,7 @@ export default function Filter({
                 <Select
                     onValueChange={(value) =>
                         updateFilterValues({
-                            objectType: value === "any" ? undefined : value,
+                            objectType: value === "any" ? "" : value,
                         })
                     }
                     value={
@@ -128,6 +138,10 @@ export default function Filter({
                     </SelectContent>
                 </Select>
             </div>
+
+            <Button variant="outline" onClick={handleReset}>
+                Сбросить
+            </Button>
         </div>
     );
 }
