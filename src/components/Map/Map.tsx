@@ -3,13 +3,7 @@
 import axios from "axios";
 import L from "leaflet";
 import { useEffect, useState } from "react";
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    Popup,
-    LayersControl,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import Filter from "../Filters/Filter";
 import "./Map.scss";
@@ -17,18 +11,50 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import "../../../public/dist/react-leaflet-cluster/styles.min.css";
 
+import * as Types from "@/Types";
+
 L.Icon.Default.imagePath = "/images/";
 
 export default function Map() {
     const [data, setData] = useState([]);
     const [busStops, setBusStops] = useState([]);
+    const [filterValues, setFilterValues] = useState<Types.Filter>({
+        buildingType: undefined,
+        companyName: undefined,
+        isChain: false,
+    });
+
     useEffect(() => {
-        axios.get("/data.json").then(({ data }) => {
+        // Fetch bus stops only once
+        axios
+            .get(
+                `https://apidata.mos.ru/v1/datasets/752/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10`
+            )
+            .then(({ data }) => {
+                setBusStops(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        // axios.get("/data.json").then(({ data }) => {
+        // setData(data);
+        // });
+        // axios.get("/bus_stops.json").then(({ data }) => setBusStops(data));
+
+        let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10&$filter=IsNetObject eq ${filterValues.isChain}`;
+
+        if (filterValues.companyName) {
+            fetchUrl += ` and OperatingCompany eq '${filterValues.companyName}'`;
+        }
+
+        // if (filterValues.buildingType) {
+        //     fetchUrl += ` and TypeObject eq '${filterValues.buildingType}'`
+        // }
+
+        axios.get(fetchUrl).then(({ data }) => {
             setData(data);
         });
-
-        axios.get("/bus_stops.json").then(({ data }) => setBusStops(data));
-    }, []);
+    }, [filterValues]);
 
     if (!data || !busStops) return;
 
@@ -99,7 +125,10 @@ export default function Map() {
                     </Marker>
                 ))}
             </MarkerClusterGroup>
-            <Filter></Filter>
+            <Filter
+                setFilterValues={setFilterValues}
+                filterValues={filterValues}
+            ></Filter>
         </MapContainer>
     );
 }
