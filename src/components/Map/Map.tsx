@@ -18,10 +18,13 @@ export default function Map() {
     const [data, setData] = useState([]);
     const [busStops, setBusStops] = useState([]);
     const [filterValues, setFilterValues] = useState<Types.Filter>({
-        objectType: undefined,
-        companyName: undefined,
+        objectType: "",
+        companyName: "",
         isNet: undefined,
     });
+    const [debounceTimeout, setDebounceTimeout] = useState<
+        NodeJS.Timeout | undefined
+    >(undefined);
 
     useEffect(() => {
         // Fetch bus stops only once
@@ -35,28 +38,29 @@ export default function Map() {
     }, []);
 
     useEffect(() => {
-        // axios.get("/data.json").then(({ data }) => {
-        // setData(data);
-        // });
-        // axios.get("/bus_stops.json").then(({ data }) => setBusStops(data));
-
         let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10&$filter=`;
 
         if (filterValues.isNet !== undefined) {
             fetchUrl += `IsNetObject eq ${filterValues.isNet}`;
         }
 
-        if (filterValues.companyName) {
-            fetchUrl += ` and OperatingCompany eq '${filterValues.companyName}'`;
+        if (filterValues.companyName.trim()) {
+            fetchUrl += ` and OperatingCompany eq '${filterValues.companyName.trim()}'`;
         }
 
-        if (filterValues.objectType) {
-            fetchUrl += ` and TypeObject eq '${filterValues.objectType}'`;
+        if (filterValues.objectType.trim()) {
+            fetchUrl += ` and TypeObject eq '${filterValues.objectType.trim()}'`;
         }
 
-        axios.get(fetchUrl).then(({ data }) => {
-            setData(data);
-        });
+        // Debounce!
+        clearTimeout(debounceTimeout);
+        setDebounceTimeout(
+            setTimeout(() => {
+                axios.get(fetchUrl).then(({ data }) => {
+                    setData(data);
+                });
+            }, 800)
+        );
     }, [filterValues]);
 
     if (!data || !busStops) return;

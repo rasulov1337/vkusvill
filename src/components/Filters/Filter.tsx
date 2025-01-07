@@ -72,12 +72,15 @@ export default function Filter({
                 <Select
                     onValueChange={(value) =>
                         updateFilterValues({
-                            objectType:
-                                value === "undefined" ? undefined : value,
+                            objectType: value === "any" ? undefined : value,
                         })
                     }
-                    value={filterValues.objectType}
-                    defaultValue="undefined"
+                    value={
+                        filterValues.objectType
+                            ? filterValues.objectType
+                            : "any"
+                    }
+                    defaultValue="any"
                 >
                     <SelectTrigger className="w-[100%]">
                         <SelectValue />
@@ -86,7 +89,7 @@ export default function Filter({
                         className="w-[225px] h-[300px] leaflet-control"
                         id="object-type"
                     >
-                        <SelectItem value="undefined">Любой</SelectItem>
+                        <SelectItem value="any">Любой</SelectItem>
                         {OBJECT_TYPES.map((type, index) => (
                             <SelectItem key={index} value={type}>
                                 {type}
