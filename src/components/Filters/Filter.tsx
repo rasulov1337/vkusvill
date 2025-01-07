@@ -49,11 +49,11 @@ export default function Filter({
     return (
         <div
             id="filter"
-            className="leaflet-control text-zinc-50 bg-zinc-950 gap-5 top-1/2 left-5 flex flex-col select-none box-border rounded-lg p-5 -translate-y-1/2 font-inter"
+            className="leaflet-control text-zinc-50 bg-zinc-950 gap-6 top-1/2 left-5 flex flex-col select-none box-border rounded-lg p-5 -translate-y-1/2 font-inter"
             draggable="false"
         >
             <p className="font-semibold text-xl">Фильтры</p>
-            <div>
+            <div className="grid gap-2">
                 <Label className="font-light">
                     Название управляющей компании
                 </Label>
@@ -65,7 +65,7 @@ export default function Filter({
                     }
                 ></Input>
             </div>
-            <div>
+            <div className="grid gap-2">
                 <Label htmlFor="object-type" className="font-light">
                     Тип объекта
                 </Label>
@@ -96,7 +96,7 @@ export default function Filter({
                 </Select>
             </div>
 
-            <div>
+            <div className="grid gap-2">
                 <Label htmlFor="is-net" className="font-light">
                     Является сетевым
                 </Label>
