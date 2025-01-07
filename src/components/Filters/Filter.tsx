@@ -139,7 +139,7 @@ export default function Filter({
                 </Select>
             </div>
 
-            <Button variant="outline" onClick={handleReset}>
+            <Button type="reset" variant="outline" onClick={handleReset}>
                 Сбросить
             </Button>
         </div>
