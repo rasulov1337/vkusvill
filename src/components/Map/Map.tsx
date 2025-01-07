@@ -63,10 +63,9 @@ export default function Map() {
 
     return (
         <MapContainer
-            className="relative"
+            className="relative w-full h-full"
             center={[55.879001531303373, 37.714565000436039]}
             zoom={13}
-            style={{ height: "90vh", width: "100%" }}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

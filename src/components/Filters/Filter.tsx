@@ -39,7 +39,7 @@ export default function Filter({
 
     // Disable map grabbing & scrolling on filter element mouse events
     useEffect(() => {
-        const filterElement = document.querySelector(".filter") as HTMLElement;
+        const filterElement = document.getElementById("filter") as HTMLElement;
         if (filterElement) {
             L.DomEvent.disableClickPropagation(filterElement);
             L.DomEvent.disableScrollPropagation(filterElement);
@@ -48,6 +48,7 @@ export default function Filter({
 
     return (
         <div
+            id="filter"
             className="leaflet-control text-zinc-50 bg-zinc-950 gap-5 top-1/2 left-5 flex flex-col select-none box-border rounded-lg p-5 -translate-y-1/2"
             draggable="false"
         >
@@ -78,7 +79,7 @@ export default function Filter({
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent
-                        className="w-[225px] h-[300px] on-map"
+                        className="w-[225px] h-[300px] leaflet-control"
                         id="object-type"
                     >
                         <SelectItem value="undefined">Любой</SelectItem>
@@ -111,7 +112,7 @@ export default function Filter({
                     <SelectTrigger className="w-[100%]">
                         <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="on-map" id="is-net">
+                    <SelectContent className="leaflet-control" id="is-net">
                         <SelectItem value="undefined">Любой</SelectItem>
                         <SelectItem value="true">Да</SelectItem>
                         <SelectItem value="false">Нет</SelectItem>
