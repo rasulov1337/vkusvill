@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import Filter from "../Filters/Filter";
-import "./Map.scss";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 
 import "../../../public/dist/react-leaflet-cluster/styles.min.css";
@@ -64,7 +63,7 @@ export default function Map() {
 
     return (
         <MapContainer
-            className="map"
+            className="relative"
             center={[55.879001531303373, 37.714565000436039]}
             zoom={13}
             style={{ height: "90vh", width: "100%" }}
@@ -93,8 +92,8 @@ export default function Map() {
                             el.Cells.geoData.coordinates[0],
                         ]}
                     >
-                        <Popup className="popup">
-                            <p className="popup__place-name">
+                        <Popup className="popup inter">
+                            <p className="text-base font-semibold">
                                 {el.Cells.Name + '"'}
                             </p>
                         </Popup>
