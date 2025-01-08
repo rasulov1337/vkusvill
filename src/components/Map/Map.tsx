@@ -5,14 +5,11 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
 
 import axios from "axios";
-import L, { Layer } from "leaflet";
+import L from "leaflet";
 import "leaflet.markercluster";
 
-import { locationIcon, busStopIcon } from "@/app/Icon";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
-
-import BusStopPopup from "@/components/BusStopPopup/BusStopPopup";
+import { MapContainer, TileLayer } from "react-leaflet";
 
 import Filter from "../Filters/Filter";
 
@@ -20,189 +17,8 @@ import * as Types from "@/Types";
 
 L.Icon.Default.imagePath = "/images/";
 
-import { createRoot } from "react-dom/client";
-import RestaurantPopup from "../RestaurantPopup/RestaurantPopup";
-
-const MIN_ZOOM_FOR_BUS_STOPS = 17;
-
-const BusStopsClusterMarkers = ({
-    busStops,
-}: {
-    busStops: Types.BusStopsData[];
-}) => {
-    const map = useMap();
-
-    useEffect(() => {
-        if (!busStops.length) return;
-
-        const busStopLayer = L.layerGroup();
-
-        busStops.forEach((el) => {
-            const marker = L.marker(
-                [
-                    el.Cells.geoData.coordinates[1],
-                    el.Cells.geoData.coordinates[0],
-                ],
-                { icon: busStopIcon }
-            );
-
-            const popupContainer = document.createElement("div");
-            const root = createRoot(popupContainer);
-            root.render(<BusStopPopup busStop={el} />);
-
-            const popup = L.popup({
-                className: "custom-popup",
-                closeButton: false,
-            }).setContent(popupContainer);
-
-            let isMouseOverPopup = false;
-
-            marker.on("mouseover", () => {
-                marker.bindPopup(popup).openPopup();
-            });
-
-            popupContainer.addEventListener("mouseover", () => {
-                isMouseOverPopup = true;
-            });
-
-            popupContainer.addEventListener("mouseout", () => {
-                isMouseOverPopup = false;
-                setTimeout(() => {
-                    if (!isMouseOverPopup) {
-                        marker.closePopup();
-                    }
-                }, 200);
-            });
-
-            marker.on("mouseout", () => {
-                setTimeout(() => {
-                    if (!isMouseOverPopup) {
-                        marker.closePopup();
-                    }
-                }, 200);
-            });
-            busStopLayer.addLayer(marker);
-        });
-
-        map.on("zoomend", () => {
-            const currentZoom = map.getZoom();
-
-            if (currentZoom >= MIN_ZOOM_FOR_BUS_STOPS) {
-                map.addLayer(busStopLayer);
-            } else {
-                map.removeLayer(busStopLayer);
-            }
-        });
-
-        return () => {
-            map.removeLayer(busStopLayer);
-        };
-    }, [busStops, map]);
-
-    return null;
-};
-
-const RestaurantClusterMarkers = ({
-    restaurants,
-}: {
-    restaurants: Types.RestaurantData[];
-}) => {
-    const map = useMap();
-
-    useEffect(() => {
-        if (!restaurants.length) return;
-
-        const markerClusterGroup = L.markerClusterGroup({
-            iconCreateFunction: function (cluster) {
-                const count = cluster.getChildCount();
-
-                const fraction = Math.round(count / 5);
-                let zincColor = 950;
-
-                if (fraction < 0.5) {
-                    zincColor = 800;
-                }
-
-                return L.divIcon({
-                    html: `<div class="flex items-center justify-center text-zinc-${
-                        950 - zincColor
-                    } text-lg bg-zinc-${zincColor} border-2 border-zinc-700 rounded-full w-10 h-10">${count}</div>`,
-                    className: "custom-cluster-icon",
-                    iconSize: L.point(40, 40, true),
-                });
-            },
-
-            chunkedLoading: true,
-            showCoverageOnHover: true,
-            polygonOptions: {
-                color: "#3f3f46",
-                weight: 2,
-                opacity: 0.9,
-                fillColor: "#3f3f46",
-                fillOpacity: 0.3,
-            },
-        });
-
-        const markers = [] as Layer[];
-        restaurants.forEach((el) => {
-            const marker = L.marker(
-                [
-                    el.Cells.geoData.coordinates[1],
-                    el.Cells.geoData.coordinates[0],
-                ],
-                { icon: locationIcon }
-            );
-
-            const popupContainer = document.createElement("div");
-            const root = createRoot(popupContainer);
-            root.render(<RestaurantPopup restaurant={el} />);
-
-            const popup = L.popup({
-                className: "custom-popup",
-                closeButton: false,
-                closeOnClick: false,
-            }).setContent(popupContainer);
-
-            let isMouseOverPopup = false;
-
-            marker.on("mouseover", () => {
-                marker.bindPopup(popup).openPopup();
-            });
-
-            popupContainer.addEventListener("mouseover", () => {
-                isMouseOverPopup = true;
-            });
-
-            popupContainer.addEventListener("mouseout", () => {
-                isMouseOverPopup = false;
-                setTimeout(() => {
-                    if (!isMouseOverPopup) {
-                        marker.closePopup();
-                    }
-                }, 200);
-            });
-
-            marker.on("mouseout", () => {
-                setTimeout(() => {
-                    if (!isMouseOverPopup) {
-                        marker.closePopup();
-                    }
-                }, 200);
-            });
-
-            markers.push(marker);
-        });
-
-        markerClusterGroup.addLayers(markers);
-        map.addLayer(markerClusterGroup);
-
-        return () => {
-            map.removeLayer(markerClusterGroup);
-        };
-    }, [restaurants, map]);
-
-    return null;
-};
+import BusStops from "./BusStops";
+import RestaurantClusterMarkers from "./Restaurants";
 
 export default function Map() {
     const [data, setData] = useState<Types.RestaurantData[]>([]);
@@ -266,7 +82,7 @@ export default function Map() {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            <BusStopsClusterMarkers busStops={busStops} />
+            <BusStops busStops={busStops} />
             <RestaurantClusterMarkers
                 restaurants={data}
             ></RestaurantClusterMarkers>
