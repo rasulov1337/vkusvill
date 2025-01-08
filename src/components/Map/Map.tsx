@@ -23,6 +23,8 @@ L.Icon.Default.imagePath = "/images/";
 import { createRoot } from "react-dom/client";
 import RestaurantPopup from "../RestaurantPopup/RestaurantPopup";
 
+const MIN_ZOOM_FOR_BUS_STOPS = 17;
+
 const BusStopsClusterMarkers = ({
     busStops,
 }: {
@@ -33,38 +35,8 @@ const BusStopsClusterMarkers = ({
     useEffect(() => {
         if (!busStops.length) return;
 
-        const markerClusterGroup = L.markerClusterGroup({
-            iconCreateFunction: function (cluster) {
-                const count = cluster.getChildCount();
+        const busStopLayer = L.layerGroup();
 
-                let zincColor = Math.min(Math.round(count / 5) * 50, 950);
-                zincColor = Math.max(zincColor, 500);
-
-                return L.divIcon({
-                    html: `<div class="flex items-center justify-center text-zinc-${
-                        950 - zincColor
-                    } text-lg bg-zinc-${zincColor} border-2 border-zinc-${Math.max(
-                        zincColor + 200,
-                        950
-                    )} rounded-full w-10 h-10">${count}</div>`,
-                    className: "custom-cluster-icon",
-                    iconSize: L.point(40, 40, true),
-                });
-            },
-
-            showCoverageOnHover: true,
-            polygonOptions: {
-                color: "#111827",
-                weight: 2,
-                opacity: 0.9,
-                fillColor: "#111827",
-                fillOpacity: 0.3,
-            },
-            chunkedLoading: true,
-            maxClusterRadius: 80,
-        });
-
-        const markers = [] as Layer[];
         busStops.forEach((el) => {
             const marker = L.marker(
                 [
@@ -109,17 +81,21 @@ const BusStopsClusterMarkers = ({
                     }
                 }, 200);
             });
-            markers.push(marker);
+            busStopLayer.addLayer(marker);
         });
-        markerClusterGroup.addLayers(markers);
 
-        map.addLayer(markerClusterGroup);
+        map.on("zoomend", () => {
+            const currentZoom = map.getZoom();
 
-        // Update cluster icons on resize
-        map.on("resize", () => markerClusterGroup.refreshClusters());
+            if (currentZoom >= MIN_ZOOM_FOR_BUS_STOPS) {
+                map.addLayer(busStopLayer);
+            } else {
+                map.removeLayer(busStopLayer);
+            }
+        });
 
         return () => {
-            map.removeLayer(markerClusterGroup);
+            map.removeLayer(busStopLayer);
         };
     }, [busStops, map]);
 
