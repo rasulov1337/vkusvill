@@ -10,7 +10,7 @@ import "leaflet.markercluster";
 
 import { locationIcon, busStopIcon } from "@/app/Icon";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 import BusStopPopup from "@/components/BusStopPopup/BusStopPopup";
 
@@ -21,6 +21,7 @@ import * as Types from "@/Types";
 L.Icon.Default.imagePath = "/images/";
 
 import { createRoot } from "react-dom/client";
+import RestaurantPopup from "../RestaurantPopup/RestaurantPopup";
 
 const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
     const map = useMap();
@@ -41,6 +42,55 @@ const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
             const popupContainer = document.createElement("div");
             const root = createRoot(popupContainer);
             root.render(<BusStopPopup busStop={el} />);
+
+            const popup = L.popup({ className: "custom-popup" }).setContent(
+                popupContainer
+            );
+
+            marker.on("mouseover", () => {
+                marker.bindPopup(popup).openPopup();
+            });
+
+            marker.on("mouseout", () => {
+                marker.closePopup();
+            });
+
+            markerClusterGroup.addLayer(marker);
+        });
+
+        map.addLayer(markerClusterGroup);
+
+        return () => {
+            map.removeLayer(markerClusterGroup);
+        };
+    }, [busStops, map]);
+
+    return null;
+};
+
+const RestaurantClusterMarkers = ({
+    busStops,
+}: {
+    busStops: Types.RestaurantData[];
+}) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (!busStops.length) return;
+
+        const markerClusterGroup = L.markerClusterGroup();
+        busStops.forEach((el) => {
+            const marker = L.marker(
+                [
+                    el.Cells.geoData.coordinates[1],
+                    el.Cells.geoData.coordinates[0],
+                ],
+                { icon: locationIcon }
+            );
+
+            const popupContainer = document.createElement("div");
+            const root = createRoot(popupContainer);
+            root.render(<RestaurantPopup restaurant={el} />);
 
             const popup = L.popup({ className: "custom-popup" }).setContent(
                 popupContainer
@@ -130,30 +180,10 @@ export default function Map() {
             />
 
             <ClusterMarkers busStops={busStops} />
+            <RestaurantClusterMarkers
+                busStops={data}
+            ></RestaurantClusterMarkers>
 
-            {data.map((el, index) => (
-                <Marker
-                    key={index}
-                    position={[
-                        el.Cells.geoData.coordinates[1],
-                        el.Cells.geoData.coordinates[0],
-                    ]}
-                    icon={locationIcon}
-                >
-                    <Popup className="popup">
-                        <p className="popup__place-name">
-                            {el.Cells.TypeObject + ' "' + el.Cells.Name + '"'}
-                        </p>
-                        <p className="popup__operating-company">
-                            {el.Cells.OperatingCompany}
-                        </p>
-                        <p className="popup__operating-company">
-                            {el.Cells.Address}
-                        </p>
-                        <p>Число посадочных мест: {el.Cells.SeatsCount}</p>
-                    </Popup>
-                </Marker>
-            ))}
             <Filter
                 setFilterValues={setFilterValues}
                 filterValues={filterValues}
