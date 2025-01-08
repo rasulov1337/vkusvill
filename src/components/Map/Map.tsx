@@ -43,9 +43,10 @@ const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
             const root = createRoot(popupContainer);
             root.render(<BusStopPopup busStop={el} />);
 
-            const popup = L.popup({ className: "custom-popup" }).setContent(
-                popupContainer
-            );
+            const popup = L.popup({
+                className: "custom-popup",
+                closeButton: false,
+            }).setContent(popupContainer);
 
             marker.on("mouseover", () => {
                 marker.bindPopup(popup).openPopup();
@@ -92,9 +93,10 @@ const RestaurantClusterMarkers = ({
             const root = createRoot(popupContainer);
             root.render(<RestaurantPopup restaurant={el} />);
 
-            const popup = L.popup({ className: "custom-popup" }).setContent(
-                popupContainer
-            );
+            const popup = L.popup({
+                className: "custom-popup",
+                closeButton: false,
+            }).setContent(popupContainer);
 
             marker.on("mouseover", () => {
                 marker.bindPopup(popup).openPopup();
