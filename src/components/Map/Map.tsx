@@ -12,6 +12,8 @@ import { locationIcon, busStopIcon } from "@/app/Icon";
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
+import BusStopPopup from "@/components/BusStopPopup/BusStopPopup";
+
 import Filter from "../Filters/Filter";
 
 import * as Types from "@/Types";
@@ -36,7 +38,13 @@ const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
                 { icon: busStopIcon }
             );
 
-            const popup = L.popup().setContent(`<b>${el.Cells.Name}</b>`);
+            const popupContainer = document.createElement("div");
+            const root = createRoot(popupContainer);
+            root.render(<BusStopPopup busStop={el} />);
+
+            const popup = L.popup({ className: "custom-popup" }).setContent(
+                popupContainer
+            );
 
             marker.on("mouseover", () => {
                 marker.bindPopup(popup).openPopup();
