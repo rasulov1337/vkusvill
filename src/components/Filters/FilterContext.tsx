@@ -8,17 +8,17 @@ interface FilterContextType {
 
 const FilterContext = createContext<FilterContextType>({
     filterValues: {
-        companyName: undefined,
-        buildingType: undefined,
-        isChain: false,
+        companyName: "",
+        objectType: "",
+        isNet: false,
     },
 });
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
     const [filterValues, setFilterValues] = useState<Types.Filter>({
         companyName: "",
-        buildingType: "",
-        isChain: false,
+        objectType: "",
+        isNet: false,
     });
 
     const updateFilterValues = (newValues: Partial<Types.Filter>) => {
