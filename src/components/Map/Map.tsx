@@ -18,7 +18,9 @@ import * as Types from "@/Types";
 
 L.Icon.Default.imagePath = "/images/";
 
-const ClusterMarkers = ({ busStops }) => {
+import { createRoot } from "react-dom/client";
+
+const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
     const map = useMap();
 
     useEffect(() => {
@@ -58,7 +60,7 @@ const ClusterMarkers = ({ busStops }) => {
 };
 
 export default function Map() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<Types.RestaurantData[]>([]);
     const [busStops, setBusStops] = useState([]);
     const [filterValues, setFilterValues] = useState<Types.Filter>({
         objectType: "",
