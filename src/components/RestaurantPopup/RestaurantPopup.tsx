@@ -20,7 +20,9 @@ const RestaurantPopup = ({
                 Контакты:
                 <ul className="list-disc ms-9">
                     {restaurant.Cells.PublicPhone.map((phone, index) => (
-                        <li key={index}>{phone.PublicPhone}</li>
+                        <li key={index}>
+                            <a href="tel:">+7 {phone.PublicPhone}</a>
+                        </li>
                     ))}
                 </ul>
             </div>
