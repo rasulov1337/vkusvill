@@ -52,12 +52,31 @@ const BusStopsClusterMarkers = ({
                 closeButton: false,
             }).setContent(popupContainer);
 
+            let isMouseOverPopup = false;
+
             marker.on("mouseover", () => {
                 marker.bindPopup(popup).openPopup();
             });
 
+            popupContainer.addEventListener("mouseover", () => {
+                isMouseOverPopup = true;
+            });
+
+            popupContainer.addEventListener("mouseout", () => {
+                isMouseOverPopup = false;
+                setTimeout(() => {
+                    if (!isMouseOverPopup) {
+                        marker.closePopup();
+                    }
+                }, 200);
+            });
+
             marker.on("mouseout", () => {
-                marker.closePopup();
+                setTimeout(() => {
+                    if (!isMouseOverPopup) {
+                        marker.closePopup();
+                    }
+                }, 200);
             });
 
             markerClusterGroup.addLayer(marker);
@@ -100,14 +119,34 @@ const RestaurantClusterMarkers = ({
             const popup = L.popup({
                 className: "custom-popup",
                 closeButton: false,
+                closeOnClick: false,
             }).setContent(popupContainer);
+
+            let isMouseOverPopup = false;
 
             marker.on("mouseover", () => {
                 marker.bindPopup(popup).openPopup();
             });
 
+            popupContainer.addEventListener("mouseover", () => {
+                isMouseOverPopup = true;
+            });
+
+            popupContainer.addEventListener("mouseout", () => {
+                isMouseOverPopup = false;
+                setTimeout(() => {
+                    if (!isMouseOverPopup) {
+                        marker.closePopup();
+                    }
+                }, 200);
+            });
+
             marker.on("mouseout", () => {
-                marker.closePopup();
+                setTimeout(() => {
+                    if (!isMouseOverPopup) {
+                        marker.closePopup();
+                    }
+                }, 200);
             });
 
             markerClusterGroup.addLayer(marker);
