@@ -23,7 +23,11 @@ L.Icon.Default.imagePath = "/images/";
 import { createRoot } from "react-dom/client";
 import RestaurantPopup from "../RestaurantPopup/RestaurantPopup";
 
-const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
+const BusStopsClusterMarkers = ({
+    busStops,
+}: {
+    busStops: Types.BusStopsData[];
+}) => {
     const map = useMap();
 
     useEffect(() => {
@@ -70,17 +74,17 @@ const ClusterMarkers = ({ busStops }: { busStops: Types.BusStopsData[] }) => {
 };
 
 const RestaurantClusterMarkers = ({
-    busStops,
+    restaurants,
 }: {
-    busStops: Types.RestaurantData[];
+    restaurants: Types.RestaurantData[];
 }) => {
     const map = useMap();
 
     useEffect(() => {
-        if (!busStops.length) return;
+        if (!restaurants.length) return;
 
         const markerClusterGroup = L.markerClusterGroup();
-        busStops.forEach((el) => {
+        restaurants.forEach((el) => {
             const marker = L.marker(
                 [
                     el.Cells.geoData.coordinates[1],
@@ -114,7 +118,7 @@ const RestaurantClusterMarkers = ({
         return () => {
             map.removeLayer(markerClusterGroup);
         };
-    }, [busStops, map]);
+    }, [restaurants, map]);
 
     return null;
 };
@@ -181,9 +185,9 @@ export default function Map() {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            <ClusterMarkers busStops={busStops} />
+            <BusStopsClusterMarkers busStops={busStops} />
             <RestaurantClusterMarkers
-                busStops={data}
+                restaurants={data}
             ></RestaurantClusterMarkers>
 
             <Filter
