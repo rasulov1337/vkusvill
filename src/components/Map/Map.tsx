@@ -5,7 +5,7 @@ import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import "leaflet/dist/leaflet.css";
 
 import axios from "axios";
-import L from "leaflet";
+import L, { Layer } from "leaflet";
 import "leaflet.markercluster";
 
 import { locationIcon, busStopIcon } from "@/app/Icon";
@@ -33,7 +33,38 @@ const BusStopsClusterMarkers = ({
     useEffect(() => {
         if (!busStops.length) return;
 
-        const markerClusterGroup = L.markerClusterGroup();
+        const markerClusterGroup = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                const count = cluster.getChildCount();
+
+                let zincColor = Math.min(Math.round(count / 5) * 50, 950);
+                zincColor = Math.max(zincColor, 500);
+
+                return L.divIcon({
+                    html: `<div class="flex items-center justify-center text-zinc-${
+                        950 - zincColor
+                    } text-lg bg-zinc-${zincColor} border-2 border-zinc-${Math.max(
+                        zincColor + 200,
+                        950
+                    )} rounded-full w-10 h-10">${count}</div>`,
+                    className: "custom-cluster-icon",
+                    iconSize: L.point(40, 40, true),
+                });
+            },
+
+            showCoverageOnHover: true,
+            polygonOptions: {
+                color: "#111827",
+                weight: 2,
+                opacity: 0.9,
+                fillColor: "#111827",
+                fillOpacity: 0.3,
+            },
+            chunkedLoading: true,
+            maxClusterRadius: 80,
+        });
+
+        const markers = [] as Layer[];
         busStops.forEach((el) => {
             const marker = L.marker(
                 [
@@ -78,11 +109,14 @@ const BusStopsClusterMarkers = ({
                     }
                 }, 200);
             });
-
-            markerClusterGroup.addLayer(marker);
+            markers.push(marker);
         });
+        markerClusterGroup.addLayers(markers);
 
         map.addLayer(markerClusterGroup);
+
+        // Update cluster icons on resize
+        map.on("resize", () => markerClusterGroup.refreshClusters());
 
         return () => {
             map.removeLayer(markerClusterGroup);
@@ -102,7 +136,38 @@ const RestaurantClusterMarkers = ({
     useEffect(() => {
         if (!restaurants.length) return;
 
-        const markerClusterGroup = L.markerClusterGroup();
+        const markerClusterGroup = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                const count = cluster.getChildCount();
+
+                const fraction = Math.round(count / 5);
+                let zincColor = 950;
+
+                if (fraction < 0.5) {
+                    zincColor = 800;
+                }
+
+                return L.divIcon({
+                    html: `<div class="flex items-center justify-center text-zinc-${
+                        950 - zincColor
+                    } text-lg bg-zinc-${zincColor} border-2 border-zinc-700 rounded-full w-10 h-10">${count}</div>`,
+                    className: "custom-cluster-icon",
+                    iconSize: L.point(40, 40, true),
+                });
+            },
+
+            chunkedLoading: true,
+            showCoverageOnHover: true,
+            polygonOptions: {
+                color: "#3f3f46",
+                weight: 2,
+                opacity: 0.9,
+                fillColor: "#3f3f46",
+                fillOpacity: 0.3,
+            },
+        });
+
+        const markers = [] as Layer[];
         restaurants.forEach((el) => {
             const marker = L.marker(
                 [
@@ -149,9 +214,10 @@ const RestaurantClusterMarkers = ({
                 }, 200);
             });
 
-            markerClusterGroup.addLayer(marker);
+            markers.push(marker);
         });
 
+        markerClusterGroup.addLayers(markers);
         map.addLayer(markerClusterGroup);
 
         return () => {
@@ -178,7 +244,7 @@ export default function Map() {
         // Fetch bus stops only once
         axios
             .get(
-                `https://apidata.mos.ru/v1/datasets/752/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10`
+                `https://apidata.mos.ru/v1/datasets/752/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$filter=EntryState eq 'активна'`
             )
             .then(({ data }) => {
                 setBusStops(data);
@@ -186,7 +252,7 @@ export default function Map() {
     }, []);
 
     useEffect(() => {
-        let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$top=10&$filter=`;
+        let fetchUrl = `https://apidata.mos.ru/v1/datasets/1903/rows?api_key=${process.env.NEXT_PUBLIC_API_KEY}&$filter=`;
 
         if (filterValues.isNet !== undefined) {
             fetchUrl += `IsNetObject eq ${filterValues.isNet}`;
