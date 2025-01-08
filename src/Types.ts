@@ -4,14 +4,14 @@ export interface Filter {
     isNet: boolean | undefined;
 }
 
-type GeoData = {
+interface GeoData {
     coordinates: [number, number];
     type: "Point";
-};
+}
 
 type BooleanAsString = "да" | "нет";
 
-type BusStopsCells = {
+interface BusStopsCells {
     ID: number;
     Name: string;
     Longitude_WGS84: string;
@@ -27,21 +27,21 @@ type BusStopsCells = {
     global_id: number;
     PlaceDescription: string;
     geoData: GeoData;
-};
+}
 
-export type BusStopsData = {
+export interface BusStopsData {
     global_id: number;
     Number: number;
     Cells: BusStopsCells;
-};
+}
 
-type PublicPhone = {
+interface PublicPhone {
     is_deleted: number;
     PublicPhone: string;
     global_id: number;
-};
+}
 
-type Cells = {
+interface Cells {
     ID: string;
     Name: string;
     global_id: number;
@@ -57,10 +57,15 @@ type Cells = {
     Longitude_WGS84: string;
     Latitude_WGS84: string;
     geoData: GeoData;
-};
+}
 
-export type RestaurantData = {
+export interface RestaurantData {
     global_id: string;
     Number: number;
     Cells: Cells;
-};
+}
+
+export interface ActiveLayers {
+    busStops: boolean;
+    restaurants: boolean;
+}
