@@ -1,19 +1,61 @@
 "use client";
 
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "leaflet/dist/leaflet.css";
+
 import axios from "axios";
 import L from "leaflet";
+import "leaflet.markercluster";
+
 import { locationIcon, busStopIcon } from "@/app/Icon";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 import Filter from "../Filters/Filter";
-import MarkerClusterGroup from "react-leaflet-markercluster";
-
-import "../../../public/dist/react-leaflet-cluster/styles.min.css";
 
 import * as Types from "@/Types";
 
 L.Icon.Default.imagePath = "/images/";
+
+const ClusterMarkers = ({ busStops }) => {
+    const map = useMap();
+
+    useEffect(() => {
+        if (!busStops.length) return;
+
+        const markerClusterGroup = L.markerClusterGroup();
+        busStops.forEach((el) => {
+            const marker = L.marker(
+                [
+                    el.Cells.geoData.coordinates[1],
+                    el.Cells.geoData.coordinates[0],
+                ],
+                { icon: busStopIcon }
+            );
+
+            const popup = L.popup().setContent(`<b>${el.Cells.Name}</b>`);
+
+            marker.on("mouseover", () => {
+                marker.bindPopup(popup).openPopup();
+            });
+
+            marker.on("mouseout", () => {
+                marker.closePopup();
+            });
+
+            markerClusterGroup.addLayer(marker);
+        });
+
+        map.addLayer(markerClusterGroup);
+
+        return () => {
+            map.removeLayer(markerClusterGroup);
+        };
+    }, [busStops, map]);
+
+    return null;
+};
 
 export default function Map() {
     const [data, setData] = useState([]);
@@ -76,64 +118,32 @@ export default function Map() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
-            <MarkerClusterGroup
-                options={{
-                    maxClusterRadius: 120, // максимальный радиус кластера
-                    iconCreateFunction: (cluster) => {
-                        return L.divIcon({
-                            html: `<b>${cluster.getChildCount()}</b>`,
-                            className: "leaflet-cluster",
-                            iconSize: new L.Point(40, 40),
-                        });
-                    },
-                }}
-            >
-                {busStops.map((el, index) => (
-                    <Marker
-                        key={index}
-                        position={[
-                            el.Cells.geoData.coordinates[1],
-                            el.Cells.geoData.coordinates[0],
-                        ]}
-                        icon={locationIcon}
-                    >
-                        <Popup className="popup">
-                            <p className="text-base font-semibold">
-                                {el.Cells.Name + '"'}
-                            </p>
-                        </Popup>
-                    </Marker>
-                ))}
-            </MarkerClusterGroup>
 
-            <MarkerClusterGroup>
-                {data.map((el, index) => (
-                    <Marker
-                        key={index}
-                        position={[
-                            el.Cells.geoData.coordinates[1],
-                            el.Cells.geoData.coordinates[0],
-                        ]}
-                        icon={busStopIcon}
-                    >
-                        <Popup className="popup">
-                            <p className="popup__place-name">
-                                {el.Cells.TypeObject +
-                                    ' "' +
-                                    el.Cells.Name +
-                                    '"'}
-                            </p>
-                            <p className="popup__operating-company">
-                                {el.Cells.OperatingCompany}
-                            </p>
-                            <p className="popup__operating-company">
-                                {el.Cells.Address}
-                            </p>
-                            <p>Число посадочных мест: {el.Cells.SeatsCount}</p>
-                        </Popup>
-                    </Marker>
-                ))}
-            </MarkerClusterGroup>
+            <ClusterMarkers busStops={busStops} />
+
+            {data.map((el, index) => (
+                <Marker
+                    key={index}
+                    position={[
+                        el.Cells.geoData.coordinates[1],
+                        el.Cells.geoData.coordinates[0],
+                    ]}
+                    icon={locationIcon}
+                >
+                    <Popup className="popup">
+                        <p className="popup__place-name">
+                            {el.Cells.TypeObject + ' "' + el.Cells.Name + '"'}
+                        </p>
+                        <p className="popup__operating-company">
+                            {el.Cells.OperatingCompany}
+                        </p>
+                        <p className="popup__operating-company">
+                            {el.Cells.Address}
+                        </p>
+                        <p>Число посадочных мест: {el.Cells.SeatsCount}</p>
+                    </Popup>
+                </Marker>
+            ))}
             <Filter
                 setFilterValues={setFilterValues}
                 filterValues={filterValues}
