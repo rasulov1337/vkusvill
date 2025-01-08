@@ -25,6 +25,23 @@ body {
     display: none !important;
 }
 
+/* Custom Popup */
+.custom-popup {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+.leaflet-popup-content-wrapper {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.leaflet-popup-tip {
+    display: none;
+}
+
 @layer base {
     :root {
         --background: 0 0% 100%;

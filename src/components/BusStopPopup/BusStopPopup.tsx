@@ -1,7 +1,5 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
-import "./BusStopPopup.scss";
-
 import * as Types from "@/Types";
 
 const BusStopPopup = ({ busStop }: { busStop: Types.BusStopsData }) => (
