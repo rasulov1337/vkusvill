@@ -102,6 +102,7 @@ const RestaurantClusterMarkers = ({
             markers.push(marker);
         });
 
+        restaurantsLayer.clearLayers();
         restaurantsLayer.addLayers(markers);
         map.addLayer(restaurantsLayer);
 
