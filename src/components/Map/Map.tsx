@@ -28,6 +28,10 @@ export default function Map() {
         companyName: "",
         isNet: undefined,
     });
+    const [activeLayers, setActiveLayers] = useState<Types.ActiveLayers>({
+        busStops: true,
+        restaurants: true,
+    });
     const [debounceTimeout, setDebounceTimeout] = useState<
         NodeJS.Timeout | undefined
     >(undefined);
@@ -82,14 +86,17 @@ export default function Map() {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
 
-            <BusStops busStops={busStops} />
+            <BusStops busStops={busStops} active={activeLayers.busStops} />
             <RestaurantClusterMarkers
                 restaurants={data}
+                active={activeLayers.restaurants}
             ></RestaurantClusterMarkers>
 
             <Filter
                 setFilterValues={setFilterValues}
                 filterValues={filterValues}
+                activeLayers={activeLayers}
+                setActiveLayers={setActiveLayers}
             ></Filter>
         </MapContainer>
     );

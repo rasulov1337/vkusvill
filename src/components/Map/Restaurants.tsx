@@ -4,20 +4,19 @@ import { useMap } from "react-leaflet";
 import RestaurantPopup from "../RestaurantPopup/RestaurantPopup";
 import { Layer } from "leaflet";
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { RestaurantData } from "@/Types";
 
 const RestaurantClusterMarkers = ({
     restaurants,
+    active,
 }: {
     restaurants: RestaurantData[];
+    active: boolean;
 }) => {
     const map = useMap();
-
-    useEffect(() => {
-        if (!restaurants.length) return;
-
-        const markerClusterGroup = L.markerClusterGroup({
+    const [restaurantsLayer] = useState<L.MarkerClusterGroup>(
+        L.markerClusterGroup({
             iconCreateFunction: function (cluster) {
                 const count = cluster.getChildCount();
 
@@ -39,6 +38,7 @@ const RestaurantClusterMarkers = ({
 
             chunkedLoading: true,
             showCoverageOnHover: true,
+            spiderfyOnMaxZoom: true,
             polygonOptions: {
                 color: "#3f3f46",
                 weight: 2,
@@ -46,7 +46,11 @@ const RestaurantClusterMarkers = ({
                 fillColor: "#3f3f46",
                 fillOpacity: 0.3,
             },
-        });
+        })
+    );
+
+    useEffect(() => {
+        if (!restaurants.length) return;
 
         const markers = [] as Layer[];
         restaurants.forEach((el) => {
@@ -98,13 +102,22 @@ const RestaurantClusterMarkers = ({
             markers.push(marker);
         });
 
-        markerClusterGroup.addLayers(markers);
-        map.addLayer(markerClusterGroup);
+        restaurantsLayer.addLayers(markers);
+        map.addLayer(restaurantsLayer);
 
         return () => {
-            map.removeLayer(markerClusterGroup);
+            map.removeLayer(restaurantsLayer);
         };
     }, [restaurants, map]);
+
+    useEffect(() => {
+        if (!active) {
+            map.removeLayer(restaurantsLayer);
+            return;
+        }
+
+        map.addLayer(restaurantsLayer);
+    }, [active]);
 
     return null;
 };

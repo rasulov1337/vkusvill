@@ -1,22 +1,39 @@
 import { busStopIcon } from "@/app/Icon";
 
 import BusStopPopup from "@/components/BusStopPopup/BusStopPopup";
-import { useEffect } from "react";
-import { useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { useMap, useMapEvent } from "react-leaflet";
 
 import { BusStopsData } from "@/Types";
 import L from "leaflet";
 import { createRoot } from "react-dom/client";
 
-const MIN_ZOOM_FOR_BUS_STOPS = 17;
+const MIN_ZOOM_FOR_BUS_STOPS = 16;
 
-const BusStops = ({ busStops }: { busStops: BusStopsData[] }) => {
+const BusStops = ({
+    busStops,
+    active,
+}: {
+    busStops: BusStopsData[];
+    active: boolean;
+}) => {
     const map = useMap();
+    const [busStopLayer] = useState(L.layerGroup());
+
+    useMapEvent("zoomend", () => {
+        if (!active) return;
+
+        const currentZoom = map.getZoom();
+
+        if (currentZoom >= MIN_ZOOM_FOR_BUS_STOPS) {
+            map.addLayer(busStopLayer);
+        } else {
+            map.removeLayer(busStopLayer);
+        }
+    });
 
     useEffect(() => {
         if (!busStops.length) return;
-
-        const busStopLayer = L.layerGroup();
 
         busStops.forEach((el) => {
             const marker = L.marker(
@@ -65,20 +82,24 @@ const BusStops = ({ busStops }: { busStops: BusStopsData[] }) => {
             busStopLayer.addLayer(marker);
         });
 
-        map.on("zoomend", () => {
-            const currentZoom = map.getZoom();
-
-            if (currentZoom >= MIN_ZOOM_FOR_BUS_STOPS) {
-                map.addLayer(busStopLayer);
-            } else {
-                map.removeLayer(busStopLayer);
-            }
-        });
-
         return () => {
             map.removeLayer(busStopLayer);
         };
     }, [busStops, map]);
+
+    useEffect(() => {
+        if (!active) {
+            map.removeLayer(busStopLayer);
+            return;
+        }
+
+        const currentZoom = map.getZoom();
+        if (currentZoom >= MIN_ZOOM_FOR_BUS_STOPS) {
+            map.addLayer(busStopLayer);
+        } else {
+            map.removeLayer(busStopLayer);
+        }
+    }, [active]);
 
     return null;
 };

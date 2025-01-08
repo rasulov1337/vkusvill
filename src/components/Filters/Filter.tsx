@@ -9,6 +9,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect } from "react";
 import L from "leaflet";
 
@@ -31,12 +32,20 @@ const OBJECT_TYPES = [
 export default function Filter({
     filterValues,
     setFilterValues,
+    activeLayers,
+    setActiveLayers,
 }: {
     filterValues: Types.Filter;
     setFilterValues: React.Dispatch<React.SetStateAction<Types.Filter>>;
+    activeLayers: Types.ActiveLayers;
+    setActiveLayers: React.Dispatch<React.SetStateAction<Types.ActiveLayers>>;
 }) {
     const updateFilterValues = (newValues: Partial<Types.Filter>) => {
         setFilterValues((prevValues) => ({ ...prevValues, ...newValues }));
+    };
+
+    const updateActiveLayers = (newValues: Partial<Types.ActiveLayers>) => {
+        setActiveLayers((prevValues) => ({ ...prevValues, ...newValues }));
     };
 
     // Disable map grabbing & scrolling on filter element mouse events
@@ -53,6 +62,10 @@ export default function Filter({
             isNet: undefined,
             companyName: "",
             objectType: "",
+        });
+        setActiveLayers({
+            busStops: true,
+            restaurants: true,
         });
     };
 
@@ -137,6 +150,43 @@ export default function Filter({
                         <SelectItem value="false">Нет</SelectItem>
                     </SelectContent>
                 </Select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <Label>Слои</Label>
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="checkbox-bus-stops"
+                        checked={activeLayers.busStops}
+                        onCheckedChange={(value) =>
+                            updateActiveLayers({ busStops: value as boolean })
+                        }
+                    />
+                    <label
+                        htmlFor="checkbox-bus-stops"
+                        className="text-sm cursor-pointer font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                        Автобусные остановки
+                    </label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="checkbox-rest"
+                        checked={activeLayers.restaurants}
+                        onCheckedChange={(value) =>
+                            updateActiveLayers({
+                                restaurants: value as boolean,
+                            })
+                        }
+                    />
+                    <label
+                        htmlFor="checkbox-rest"
+                        className="text-sm cursor-pointer font-light leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                        Рестораны
+                    </label>
+                </div>
             </div>
 
             <Button type="reset" variant="outline" onClick={handleReset}>
