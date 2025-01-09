@@ -104,7 +104,8 @@ const RestaurantClusterMarkers = ({
 
         restaurantsLayer.clearLayers();
         restaurantsLayer.addLayers(markers);
-        map.addLayer(restaurantsLayer);
+
+        if (active) map.addLayer(restaurantsLayer);
 
         return () => {
             map.removeLayer(restaurantsLayer);
