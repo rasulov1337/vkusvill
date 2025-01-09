@@ -1,3 +1,4 @@
+"use client";
 import { locationIcon } from "@/app/Icon";
 import { createRoot } from "react-dom/client";
 import { useMap } from "react-leaflet";
@@ -20,17 +21,16 @@ const RestaurantClusterMarkers = ({
             iconCreateFunction: function (cluster) {
                 const count = cluster.getChildCount();
 
-                const fraction = Math.round(count / 5);
-                let zincColor = 950;
+                const fraction = count / 5;
+                const zincColor = Math.round((fraction * 950) / 100) * 100;
 
-                if (fraction < 0.5) {
-                    zincColor = 800;
-                }
+                const clampedZincColor = Math.max(
+                    100,
+                    Math.min(950, zincColor)
+                );
 
                 return L.divIcon({
-                    html: `<div class="flex items-center justify-center text-zinc-${
-                        950 - zincColor
-                    } text-lg bg-zinc-${zincColor} border-2 border-zinc-700 rounded-full w-10 h-10">${count}</div>`,
+                    html: `<div class="flex items-center justify-center text-zinc-0 text-lg bg-zinc-${clampedZincColor} border-2 border-zinc-700 rounded-full w-10 h-10">${count}</div>`,
                     className: "custom-cluster-icon",
                     iconSize: L.point(40, 40, true),
                 });

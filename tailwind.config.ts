@@ -7,6 +7,18 @@ export default {
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    safelist: [
+        "bg-zinc-100",
+        "bg-zinc-200",
+        "bg-zinc-300",
+        "bg-zinc-400",
+        "bg-zinc-500",
+        "bg-zinc-600",
+        "bg-zinc-700",
+        "bg-zinc-800",
+        "bg-zinc-900",
+        "bg-zinc-950",
+    ],
     theme: {
         extend: {
             fontFamily: {
